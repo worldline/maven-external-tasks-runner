@@ -54,6 +54,7 @@ test phase.
 
 This task should write its output in a xml file in a path known by your Jenkins instance.
 
+This plugin supports the following properties to skip test phase: `skipTests` and `maven.test.skip`
 
 # Copyright
 
