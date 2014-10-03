@@ -15,23 +15,27 @@ import java.io.IOException;
 
 @Mojo( name = "run", defaultPhase = LifecyclePhase.INITIALIZE )
 public class SubTaskRunnerMojo extends AbstractMojo {
-    @Parameter( defaultValue = "${os.name}", readonly = true)
+
+    @Parameter(defaultValue = "${os.name}", readonly = true)
     String osName;
 
-    @Parameter( required = false )
+    @Parameter(required = false)
     String taskRunnerPath;
 
-    @Parameter( required = true)
+    @Parameter(required = true)
     String taskRunnerName;
 
-    @Parameter( required = true )
+    @Parameter(required = true)
     String task;
 
-    @Parameter( defaultValue = " ", required = true )
+    @Parameter(defaultValue = " ", required = false)
     String additionalParameters;
 
-    @Parameter( defaultValue = "false", required = true)
+    @Parameter(defaultValue = "false", required = false)
     Boolean isTestPhase;
+
+    @Parameter(defaultValue = "true", required = false)
+    Boolean failOnError;
 
     @Parameter(property = "maven.test.failure.ignore", defaultValue = "false")
     Boolean ignoreTestsResults;
@@ -96,12 +100,14 @@ public class SubTaskRunnerMojo extends AbstractMojo {
 
             if (isTestPhase && ignoreTestsResults) {
                 getLog().warn("ignoring tests result");
+            } else if (!failOnError) {
+                getLog().warn("Task failed but we keep going on");
             } else {
                 throw new MojoExecutionException( "Task not found or failure : " + taskName );
             }
 
         } catch (IOException e) {
-            throw new MojoExecutionException( "Unknown error when running grunt", e );
+            throw new MojoExecutionException( "Unknown error when running", e );
         }
 
 
